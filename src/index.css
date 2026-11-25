@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "Segoe UI", sans-serif;
+  --font-display: "Space Grotesk", "Aptos Display", "Segoe UI", sans-serif;
+  --color-ink: #0b1220;
+  --color-mint: #5ee6a8;
+  --color-periwinkle: #8ea1ff;
+  --color-canvas: #f7f8fc;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    min-width: 320px;
+    margin: 0;
+    background: #f7f8fc;
+    color: #0b1220;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input, textarea, select { font: inherit; }
+  button, a { -webkit-tap-highlight-color: transparent; }
+  ::selection { background: #5ee6a8; color: #0b1220; }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(rgba(11, 18, 32, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11, 18, 32, 0.045) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .text-balance { text-wrap: balance; }
+}

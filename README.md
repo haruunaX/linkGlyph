@@ -1,29 +1,48 @@
 # LinkGlyph
 
-LinkGlyph is a browser-based QR design studio for turning links and everyday information into polished, downloadable QR codes.
+LinkGlyph is a React and TypeScript QR design studio with Tailwind CSS and a small Python/FastAPI quality-check service.
+
+## Stack
+
+- React + TypeScript + Vite
+- Tailwind CSS
+- Python 3.11+ with FastAPI
+- Browser-side QR rendering with PNG and SVG export
 
 ## Run locally
 
-Open `index.html` in a modern browser, or serve the folder with any static HTTP server. The QR engine is bundled locally, so code generation works without an internet connection. Web fonts gracefully fall back to system fonts when offline.
+Install frontend dependencies:
+
+```bash
+npm install
+```
+
+Start the Python API in one terminal:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r backend/requirements.txt
+npm run backend
+```
+
+Start the React app in another terminal:
+
+```bash
+npm run dev
+```
+
+Open the local URL printed by Vite. The Vite development server proxies `/api` to FastAPI on port `8000`.
 
 ## Features
 
 - URL, text, email, phone, and Wi-Fi QR content
-- Live preview with color, size, margin, and error-correction controls
-- Four curated, high-contrast visual presets
+- Live React preview with color, size, margin, and error-correction controls
+- Scan Proof reliability scoring from the Python API, with an offline browser fallback
 - PNG and SVG downloads
 - Browser-local project saving and recent project history
-- Responsive and keyboard-accessible interface
-
-## Visual system
-
-- Ink: `#0B1220`
-- Mint: `#5EE6A8`
-- Periwinkle: `#8EA1FF`
-- Canvas: `#F7F8FC`
-- Display type: Space Grotesk
-- UI type: Inter
+- Responsive, accessible Tailwind interface
 
 ## Privacy
 
-QR codes are rendered in the browser. Saved projects stay in local storage on the current device.
+QR codes are rendered in the browser. Saved projects stay in local storage on the current device. The optional Scan Proof API receives only the current QR configuration and does not persist it.
