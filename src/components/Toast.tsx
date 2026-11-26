@@ -11,7 +11,7 @@ export function Toast({ toast }: { toast: ToastMessage | null }) {
     <div
       role="status"
       aria-live="polite"
-      className={`fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl bg-ink py-2.5 pl-3.5 pr-2.5 text-sm font-medium text-white shadow-[0_16px_40px_-12px_rgba(11,18,32,.5)] transition duration-300 ${
+      className={`fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-3 rounded-xl bg-ink py-3 pl-4 pr-4 text-[15px] font-medium text-white shadow-[0_16px_40px_-12px_rgba(11,18,32,.5)] transition duration-300 ${
         toast ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >

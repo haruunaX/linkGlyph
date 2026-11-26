@@ -20,7 +20,7 @@ function Field({ title, hint, className = "", children }: { title: string; hint?
     <label className={`${label} ${className}`}>
       {title}
       <div className="mt-1.5">{children}</div>
-      {hint && <span className="mt-1.5 block text-xs font-normal text-slate-400">{hint}</span>}
+      {hint && <span className="mt-2 block text-sm font-normal text-slate-400">{hint}</span>}
     </label>
   );
 }
@@ -41,11 +41,11 @@ export function ContentForm({ state, onChange }: Props) {
               role="tab"
               aria-selected={active}
               onClick={() => onChange({ ...state, type: id })}
-              className={`flex min-w-0 items-center justify-center gap-1.5 rounded-lg px-1 py-2 text-xs font-medium sm:px-2 sm:text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
+              className={`flex min-w-0 items-center justify-center gap-2 rounded-lg px-1 py-2.5 text-sm font-medium sm:px-2 sm:text-[15px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
                 active ? "bg-white text-ink ring-1 ring-slate-200" : "text-slate-500 hover:text-ink"
               }`}
             >
-              <Icon className="hidden h-4 w-4 shrink-0 sm:block" />
+              <Icon className="hidden h-[18px] w-[18px] shrink-0 sm:block" />
               <span className="truncate">{text}</span>
             </button>
           );

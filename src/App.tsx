@@ -9,15 +9,16 @@ import { AdvancedPanel, StylePanel } from "./components/StylePanel";
 import { PreviewPanel, ScanProofTile } from "./components/PreviewPanel";
 import { Toast, type ToastMessage } from "./components/Toast";
 import { Features, Hero } from "./components/Landing";
-import { glass, tile } from "./components/ui";
+import { container, glass, tile } from "./components/ui";
+import { useScrollReveal } from "./lib/motion";
 
 const scrollToStudio = () => document.getElementById("studio")?.scrollIntoView({ behavior: "smooth" });
 
 function Tile({ step, title, className = "", children }: { step?: string; title: string; className?: string; children: React.ReactNode }) {
   return (
-    <section className={`${tile} p-5 sm:p-6 ${className}`} aria-label={title}>
-      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-ink">
-        {step && <span className="text-xs font-medium tabular-nums text-slate-400">{step}</span>}
+    <section data-reveal className={`${tile} p-5 sm:p-7 ${className}`} aria-label={title}>
+      <h3 className="mb-5 flex items-center gap-2.5 text-base font-semibold text-ink sm:text-lg">
+        {step && <span className="text-sm font-medium tabular-nums text-slate-400">{step}</span>}
         {title}
       </h3>
       {children}
@@ -31,6 +32,7 @@ export default function App() {
   const content = useMemo(() => buildQrContent(state), [state]);
   const [scanProof, setScanProof] = useState<ScanProof>(() => browserScanProof(state, content));
   const toastId = useRef(0);
+  useScrollReveal();
 
   const notify = useCallback((text: string, tone: ToastMessage["tone"] = "success") => {
     toastId.current += 1;
@@ -134,18 +136,18 @@ export default function App() {
         <section id="studio" className="relative isolate scroll-mt-16 overflow-hidden border-t border-slate-200/80">
           {/* Soft color field so the glass panel has something to frost. */}
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
-            <div className="absolute -left-24 top-24 h-[420px] w-[420px] rounded-full bg-mint/35 blur-[110px]" />
-            <div className="absolute -right-16 top-64 h-[460px] w-[460px] rounded-full bg-periwinkle/35 blur-[120px]" />
+            <div className="absolute -left-24 top-24 h-[460px] w-[460px] animate-[drift-a_16s_ease-in-out_infinite_alternate] rounded-full bg-mint/35 blur-[110px]" />
+            <div className="absolute -right-16 top-64 h-[500px] w-[500px] animate-[drift-b_19s_ease-in-out_infinite_alternate] rounded-full bg-periwinkle/35 blur-[120px]" />
           </div>
-          <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
-            <div className="mb-6 sm:mb-8">
-              <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">QR code studio</h2>
-              <p className="mt-1 text-[15px] text-slate-500">Make a code, check it scans, then download it.</p>
+          <div className={`${container} pb-20 pt-12 sm:pt-16`}>
+            <div data-reveal className="mb-7 sm:mb-10">
+              <h2 className="text-3xl font-semibold tracking-tight text-ink sm:text-[42px]">QR code studio</h2>
+              <p className="mt-2 text-lg text-slate-500">Make a code, check it scans, then download it.</p>
             </div>
 
             <div className={glass}>
               <div className="grid gap-2.5 sm:gap-3 lg:grid-cols-12 [&>*]:min-w-0">
-                <div className={`${tile} order-first p-4 sm:p-5 lg:order-none lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1`}>
+                <div data-reveal className={`${tile} order-first p-4 sm:p-6 lg:order-none lg:p-4 xl:p-6 lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1`}>
                   <PreviewPanel
                     state={state}
                     content={content}
@@ -176,7 +178,7 @@ export default function App() {
       </main>
 
       <footer className="border-t border-slate-200/80">
-        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-slate-400 sm:px-6">QR codes are created in your browser. Always test a code before printing.</p>
+        <p className={`${container} py-8 text-sm text-slate-400`}>QR codes are created in your browser. Always test a code before printing.</p>
       </footer>
 
       <Toast toast={toast} />

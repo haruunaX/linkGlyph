@@ -35,7 +35,7 @@ function ColorInput({ title, value, onValue }: { title: string; value: string; o
         </span>
         <input
           aria-label={`${title} hex value`}
-          className="min-w-0 flex-1 bg-transparent font-mono text-sm uppercase text-ink outline-none"
+          className="min-w-0 flex-1 bg-transparent font-mono text-[15px] uppercase text-ink outline-none"
           value={text}
           maxLength={7}
           spellCheck={false}
@@ -62,7 +62,7 @@ function Segmented<T extends string | number>({ title, value, options, onValue }
               aria-checked={active}
               title={hint}
               onClick={() => onValue(v)}
-              className={`whitespace-nowrap rounded-lg px-1 py-2 text-xs font-medium tabular-nums transition sm:px-2 sm:text-[13px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
+              className={`whitespace-nowrap rounded-lg px-1 py-2.5 text-[13px] font-medium tabular-nums transition sm:px-2 sm:text-[15px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
                 active ? "bg-white text-ink ring-1 ring-slate-200" : "text-slate-500 hover:text-ink"
               }`}
             >
@@ -90,11 +90,11 @@ export function StylePanel({ state, onChange }: Props) {
               role="radio"
               aria-checked={active}
               onClick={() => onChange({ ...state, dark: preset.dark, light: preset.light })}
-              className={`group relative flex flex-col items-start gap-2 rounded-xl border p-2.5 text-left text-[13px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
+              className={`group relative flex flex-col items-start gap-2.5 rounded-xl border p-3 text-left text-sm font-medium transition hover:-translate-y-0.5 sm:text-[15px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
                 active ? "border-ink text-ink ring-1 ring-ink" : "border-slate-200 text-slate-600 hover:border-slate-300 hover:text-ink"
               }`}
             >
-              <span className="flex h-9 w-full overflow-hidden rounded-lg border border-black/5">
+              <span className="flex h-11 w-full overflow-hidden rounded-lg border border-black/5">
                 <i className="w-1/2" style={{ background: preset.dark }} />
                 <i className="w-1/2" style={{ background: preset.light }} />
               </span>

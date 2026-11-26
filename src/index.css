@@ -86,6 +86,66 @@
   }
 }
 
+@keyframes scan {
+  0%,
+  100% {
+    top: 6%;
+  }
+  50% {
+    top: 92%;
+  }
+}
+
+@keyframes underline {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@keyframes drift-a {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(120px, 80px) scale(1.12);
+  }
+}
+
+@keyframes drift-b {
+  from {
+    transform: translate(0, 0) scale(1.05);
+  }
+  to {
+    transform: translate(-140px, -60px) scale(0.92);
+  }
+}
+
+/* Scroll reveal: elements rise in once they enter the viewport (see useScrollReveal). */
+[data-reveal] {
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease;
+}
+[data-reveal]:not([data-visible]) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
