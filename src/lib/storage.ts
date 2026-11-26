@@ -54,6 +54,13 @@ export function addToLibrary(list: SavedProject[], project: SavedProject): Saved
   return [project, ...list].slice(0, LIBRARY_LIMIT);
 }
 
+export function saveToLibrary(list: SavedProject[], project: SavedProject): SavedProject[] {
+  return addToLibrary(
+    list.filter((item) => item.id !== project.id),
+    project,
+  );
+}
+
 export function duplicateInLibrary(list: SavedProject[], id: string): SavedProject[] {
   const index = list.findIndex((item) => item.id === id);
   if (index === -1) return list;
@@ -73,12 +80,20 @@ export function renameInLibrary(list: SavedProject[], id: string, name: string):
   return list.map((item) => (item.id === id ? { ...item, name: clean } : item));
 }
 
-export function readDraft(store?: Storage): ProjectState | null {
-  const data = readJson(DRAFT_KEY, store ?? browserStore());
-  if (!data || typeof data !== "object" || Array.isArray(data)) return null;
-  return withDefaults(data as Partial<ProjectState>);
+export interface Draft {
+  state: ProjectState;
+  activeId: string | null;
 }
 
-export function writeDraft(state: ProjectState, store?: Storage): void {
-  writeJson(DRAFT_KEY, state, store ?? browserStore());
+export function readDraft(store?: Storage): Draft | null {
+  const data = readJson(DRAFT_KEY, store ?? browserStore()) as Partial<{ state: unknown; activeId: unknown }> | null;
+  if (!data || typeof data !== "object" || !data.state || typeof data.state !== "object") return null;
+  return {
+    state: withDefaults(data.state as Partial<ProjectState>),
+    activeId: typeof data.activeId === "string" ? data.activeId : null,
+  };
+}
+
+export function writeDraft(draft: Draft, store?: Storage): void {
+  writeJson(DRAFT_KEY, draft, store ?? browserStore());
 }

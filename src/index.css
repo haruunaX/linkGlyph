@@ -1,36 +1,96 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", "Segoe UI", sans-serif;
-  --font-display: "Space Grotesk", "Aptos Display", "Segoe UI", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, "Segoe UI", system-ui, sans-serif;
   --color-ink: #0b1220;
   --color-mint: #5ee6a8;
-  --color-periwinkle: #8ea1ff;
-  --color-canvas: #f7f8fc;
+  --color-canvas: #f8f9fb;
 }
 
 @layer base {
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     min-width: 320px;
     margin: 0;
-    background: #f7f8fc;
-    color: #0b1220;
+    background: var(--color-canvas);
+    color: var(--color-ink);
     font-family: var(--font-sans);
-    font-size: 16px;
+    font-feature-settings: "cv11", "ss01";
     -webkit-font-smoothing: antialiased;
   }
-  button, input, textarea, select { font: inherit; }
-  button, a { -webkit-tap-highlight-color: transparent; }
-  ::selection { background: #5ee6a8; color: #0b1220; }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-mint) 60%, transparent);
+    color: var(--color-ink);
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
 }
 
-@layer utilities {
-  .bg-grid {
-    background-image:
-      linear-gradient(rgba(11, 18, 32, 0.045) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(11, 18, 32, 0.045) 1px, transparent 1px);
-    background-size: 32px 32px;
+@layer components {
+  .range {
+    height: 4px;
+    appearance: none;
+    border-radius: 999px;
+    background: #e2e8f0;
+    cursor: pointer;
   }
-  .text-balance { text-wrap: balance; }
+  .range::-webkit-slider-thumb {
+    appearance: none;
+    height: 18px;
+    width: 18px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+    transition: transform 0.15s;
+  }
+  .range::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+  }
+  .range::-moz-range-thumb {
+    height: 18px;
+    width: 18px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+  }
+  .range:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-mint) 35%, transparent);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

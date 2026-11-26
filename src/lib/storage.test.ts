@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   LIBRARY_LIMIT,
   addToLibrary,
+  saveToLibrary,
   duplicateInLibrary,
   readDraft,
   readLibrary,
@@ -63,6 +64,17 @@ describe("library operations", () => {
     expect(next[0].id).toBe("new");
   });
 
+  it("saveToLibrary replaces an existing id and moves it to the front", () => {
+    const list = [project("a"), project("b")];
+    const next = saveToLibrary(list, { ...project("b"), name: "Edited" });
+    expect(next.map((p) => p.id)).toEqual(["b", "a"]);
+    expect(next[0].name).toBe("Edited");
+  });
+
+  it("saveToLibrary adds unknown ids to the front", () => {
+    expect(saveToLibrary([project("a")], project("c")).map((p) => p.id)).toEqual(["c", "a"]);
+  });
+
   it("duplicates right after the original", () => {
     const list = [project("a"), project("b", "Menu")];
     const next = duplicateInLibrary(list, "b");
@@ -84,8 +96,14 @@ describe("draft", () => {
   it("round-trips", () => {
     const store = memoryStore();
     const state = { ...structuredClone(defaults), name: "Draft" };
-    writeDraft(state, store);
-    expect(readDraft(store)).toEqual(state);
+    writeDraft({ state, activeId: "a" }, store);
+    expect(readDraft(store)).toEqual({ state, activeId: "a" });
+  });
+
+  it("reads legacy drafts with no activeId", () => {
+    const store = memoryStore({ "linkglyph-draft": JSON.stringify({ state: { name: "Old" } }) });
+    expect(readDraft(store)?.state.name).toBe("Old");
+    expect(readDraft(store)?.activeId).toBeNull();
   });
 
   it("returns null for corrupt drafts", () => {
