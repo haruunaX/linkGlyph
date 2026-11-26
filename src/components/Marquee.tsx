@@ -5,7 +5,7 @@ const words = ["Restaurant menus", "Guest Wi-Fi", "Event tickets", "Business car
 
 function Sparkle() {
   return (
-    <span className="mx-6 inline-grid h-6 w-6 shrink-0 grid-cols-3 gap-[2px] sm:mx-10 sm:h-8 sm:w-8" aria-hidden="true">
+    <span className="mx-5 inline-grid h-4 w-4 shrink-0 grid-cols-3 gap-[2px] sm:mx-7 sm:h-5 sm:w-5" aria-hidden="true">
       {[1, 0, 1, 0, 1, 0, 1, 0, 1].map((on, i) => (
         <i key={i} className={`rounded-[1px] ${on ? "bg-mint" : ""}`} />
       ))}
@@ -61,8 +61,8 @@ export function Marquee() {
   ));
 
   return (
-    <div className="overflow-hidden border-y border-ink bg-ink py-5 sm:py-7" aria-label={`Made for ${words.join(", ")}`}>
-      <div ref={trackRef} className="flex w-max whitespace-nowrap text-3xl font-semibold tracking-tight will-change-transform sm:text-5xl lg:text-6xl" aria-hidden="true">
+    <div className="overflow-hidden border-y border-ink bg-ink py-3.5 sm:py-4" aria-label={`Made for ${words.join(", ")}`}>
+      <div ref={trackRef} className="flex w-max whitespace-nowrap text-xl font-semibold tracking-tight will-change-transform sm:text-3xl lg:text-[40px]" aria-hidden="true">
         {row}
         {row}
       </div>

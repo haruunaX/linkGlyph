@@ -1,7 +1,7 @@
 // Flat design tokens: borders instead of shadows, solid fills, one accent.
 
 /** Page width: wide enough that big screens don't show empty side gutters. */
-export const container = "mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8";
+export const container = "mx-auto w-full max-w-[1360px] px-5 sm:px-8 lg:px-12";
 
 export const input =
   "w-full rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-2.5 text-base text-ink outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-ink focus:bg-white focus:ring-4 focus:ring-mint/30 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-400";
