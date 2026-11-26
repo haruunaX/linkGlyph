@@ -51,7 +51,7 @@ export function Hero() {
             </a>
             <span className="inline-flex items-center gap-2 text-sm text-slate-500">
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
-              Your projects stay in this browser
+              No sign-up needed
             </span>
           </div>
         </div>
@@ -132,7 +132,7 @@ export function Features() {
           <article className={`${tile} p-7`}>
             <FeatureIcon icon={LockKeyhole} />
             <h3 className="mt-5 text-lg font-semibold text-ink">Private by default</h3>
-            <p className="mt-2 text-[15px] leading-7 text-slate-600">QR generation and saved projects stay in your browser. Nothing is uploaded to create a code.</p>
+            <p className="mt-2 text-[15px] leading-7 text-slate-600">QR codes are generated right in your browser. Nothing is uploaded to create a code.</p>
           </article>
 
           <article className={`${tile} p-7`}>

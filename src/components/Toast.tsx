@@ -4,10 +4,9 @@ export interface ToastMessage {
   id: number;
   text: string;
   tone?: "success" | "info";
-  action?: { label: string; run: () => void };
 }
 
-export function Toast({ toast, onDismiss }: { toast: ToastMessage | null; onDismiss: () => void }) {
+export function Toast({ toast }: { toast: ToastMessage | null }) {
   return (
     <div
       role="status"
@@ -18,18 +17,6 @@ export function Toast({ toast, onDismiss }: { toast: ToastMessage | null; onDism
     >
       {toast?.tone === "info" ? <Info className="h-4 w-4 text-slate-300" /> : <Check className="h-4 w-4 text-mint" />}
       <span className="pr-1">{toast?.text}</span>
-      {toast?.action && (
-        <button
-          type="button"
-          onClick={() => {
-            toast.action?.run();
-            onDismiss();
-          }}
-          className="rounded-md px-2 py-1 text-mint transition hover:bg-white/10"
-        >
-          {toast.action.label}
-        </button>
-      )}
     </div>
   );
 }

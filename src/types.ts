@@ -24,12 +24,6 @@ export interface ProjectState {
   name: string;
 }
 
-export interface SavedProject extends ProjectState {
-  id: string;
-  content: string;
-  savedAt: string;
-}
-
 export interface ScanProof {
   score: number;
   grade: "Excellent" | "Good" | "Needs work";

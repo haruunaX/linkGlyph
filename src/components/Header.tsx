@@ -11,7 +11,7 @@ export function BrandMark({ className = "h-8 w-8" }: { className?: string }) {
   );
 }
 
-export function Header({ savedCount, onNew }: { savedCount: number; onNew: () => void }) {
+export function Header({ onNew }: { onNew: () => void }) {
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
@@ -25,10 +25,6 @@ export function Header({ savedCount, onNew }: { savedCount: number; onNew: () =>
           </a>
           <a href="#features" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink md:inline-flex">
             Why LinkGlyph
-          </a>
-          <a href="#library" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink sm:inline-flex">
-            My codes
-            <span className="ml-2 rounded-md bg-slate-100 px-1.5 text-xs tabular-nums text-slate-500">{savedCount}</span>
           </a>
           <button type="button" onClick={onNew} className={`${buttonSecondary} px-3 py-2`}>
             <Plus className="h-4 w-4" />

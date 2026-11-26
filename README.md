@@ -51,9 +51,9 @@ To deploy, import the repo in Vercel with **Add New → Project** (the settings 
 - Live React preview with color, size, margin, and error-correction controls
 - Scan Proof reliability scoring from the Python API, with an offline browser fallback
 - PNG and SVG downloads
-- Browser-local project saving and recent project history
+- Copy the QR image to the clipboard
 - Responsive, accessible Tailwind interface
 
 ## Privacy
 
-QR codes are rendered in the browser. Saved projects stay in local storage on the current device. The optional Scan Proof API receives only the current QR configuration and does not persist it.
+QR codes are rendered in the browser. The code you are working on is kept in local storage so a reload does not lose it; there are no accounts or saved libraries. The optional Scan Proof API receives only the current QR configuration and does not persist it.

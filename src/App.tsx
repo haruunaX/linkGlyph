@@ -1,23 +1,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import QRCode from "qrcode";
-import { browserScanProof, buildQrContent, defaults, friendlyValue, safeFilename } from "./lib/qr";
-import { duplicateInLibrary, readDraft, readLibrary, renameInLibrary, saveToLibrary, withDefaults, writeDraft, writeLibrary } from "./lib/storage";
-import type { ProjectState, SavedProject, ScanProof } from "./types";
+import { browserScanProof, buildQrContent, defaults, safeFilename } from "./lib/qr";
+import { readDraft, writeDraft } from "./lib/storage";
+import type { ProjectState, ScanProof } from "./types";
 import { Header } from "./components/Header";
 import { ContentForm } from "./components/ContentForm";
 import { AdvancedPanel, StylePanel } from "./components/StylePanel";
 import { PreviewPanel, ScanProofTile } from "./components/PreviewPanel";
-import { Library } from "./components/Library";
 import { Toast, type ToastMessage } from "./components/Toast";
 import { Features, Hero } from "./components/Landing";
 import { glass, tile } from "./components/ui";
-
-function toProjectState(project: SavedProject): ProjectState {
-  const { type, fields, dark, light, size, level, margin, name } = withDefaults(project);
-  return structuredClone({ type, fields, dark, light, size, level, margin, name });
-}
-
-const sameProject = (a: ProjectState, b: ProjectState) => JSON.stringify(a) === JSON.stringify(b);
 
 const scrollToStudio = () => document.getElementById("studio")?.scrollIntoView({ behavior: "smooth" });
 
@@ -34,40 +26,29 @@ function Tile({ step, title, className = "", children }: { step?: string; title:
 }
 
 export default function App() {
-  const initialDraft = useMemo(() => readDraft(), []);
-  const [state, setState] = useState<ProjectState>(() => initialDraft?.state ?? structuredClone(defaults));
-  const [library, setLibrary] = useState<SavedProject[]>(readLibrary);
-  const [activeId, setActiveId] = useState<string | null>(initialDraft?.activeId ?? null);
+  const [state, setState] = useState<ProjectState>(() => readDraft()?.state ?? structuredClone(defaults));
   const [toast, setToast] = useState<ToastMessage | null>(null);
   const content = useMemo(() => buildQrContent(state), [state]);
   const [scanProof, setScanProof] = useState<ScanProof>(() => browserScanProof(state, content));
   const toastId = useRef(0);
 
-  const active = library.find((item) => item.id === activeId) ?? null;
-  const status: "new" | "saved" | "edited" = !active ? "new" : sameProject(toProjectState(active), state) ? "saved" : "edited";
-
-  const notify = useCallback((text: string, extra: Omit<ToastMessage, "id" | "text"> = {}) => {
+  const notify = useCallback((text: string, tone: ToastMessage["tone"] = "success") => {
     toastId.current += 1;
-    setToast({ id: toastId.current, text, ...extra });
+    setToast({ id: toastId.current, text, tone });
   }, []);
-
-  const updateLibrary = (next: SavedProject[]) => {
-    setLibrary(next);
-    writeLibrary(next);
-  };
 
   // Toast auto-dismiss.
   useEffect(() => {
     if (!toast) return;
-    const timer = window.setTimeout(() => setToast(null), toast.action ? 5000 : 2400);
+    const timer = window.setTimeout(() => setToast(null), 2400);
     return () => window.clearTimeout(timer);
   }, [toast]);
 
-  // Remember the work in progress between visits.
+  // Remember the code in progress if the page is reloaded.
   useEffect(() => {
-    const timer = window.setTimeout(() => writeDraft({ state, activeId: active ? activeId : null }), 300);
+    const timer = window.setTimeout(() => writeDraft({ state }), 300);
     return () => window.clearTimeout(timer);
-  }, [state, activeId, active]);
+  }, [state]);
 
   // Scan Proof: instant browser score, upgraded by the Python API when reachable.
   useEffect(() => {
@@ -134,86 +115,18 @@ export default function App() {
       await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
       notify("Image copied to clipboard");
     } catch {
-      notify("Copying images isn't supported in this browser", { tone: "info" });
+      notify("Copying images isn't supported in this browser", "info");
     }
-  };
-
-  const save = useCallback(() => {
-    const name = state.name.trim() || "Untitled code";
-    const project: SavedProject = {
-      ...structuredClone({ ...state, name }),
-      id: active ? active.id : crypto.randomUUID(),
-      content: friendlyValue(state),
-      savedAt: new Date().toISOString(),
-    };
-    setState((current) => ({ ...current, name }));
-    setLibrary((current) => {
-      const next = saveToLibrary(current, project);
-      writeLibrary(next);
-      return next;
-    });
-    setActiveId(project.id);
-    notify(active ? "Changes saved" : "Saved to My codes");
-  }, [state, active, notify]);
-
-  // Ctrl/Cmd+S saves instead of opening the browser's "Save page" dialog.
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
-        event.preventDefault();
-        save();
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [save]);
-
-  const load = (project: SavedProject) => {
-    setState(toProjectState(project));
-    setActiveId(project.id);
-    scrollToStudio();
-    notify(`Opened "${project.name}"`);
   };
 
   const startNew = () => {
     setState(structuredClone({ ...defaults, name: "Untitled code" }));
-    setActiveId(null);
     scrollToStudio();
-  };
-
-  const rename = (id: string, name: string) => {
-    updateLibrary(renameInLibrary(library, id, name));
-    const clean = name.trim().slice(0, 40);
-    if (id === activeId && clean) setState((current) => ({ ...current, name: clean }));
-  };
-
-  const duplicate = (id: string) => {
-    updateLibrary(duplicateInLibrary(library, id));
-    notify("Duplicated");
-  };
-
-  const remove = (id: string) => {
-    const index = library.findIndex((item) => item.id === id);
-    if (index === -1) return;
-    const removed = library[index];
-    updateLibrary(library.filter((item) => item.id !== id));
-    notify(`Deleted "${removed.name}"`, {
-      tone: "info",
-      action: {
-        label: "Undo",
-        run: () =>
-          setLibrary((current) => {
-            const next = [...current.slice(0, index), removed, ...current.slice(index)];
-            writeLibrary(next);
-            return next;
-          }),
-      },
-    });
   };
 
   return (
     <div id="top" className="min-h-screen bg-canvas">
-      <Header savedCount={library.length} onNew={startNew} />
+      <Header onNew={startNew} />
 
       <main>
         <Hero />
@@ -227,7 +140,7 @@ export default function App() {
           <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
             <div className="mb-6 sm:mb-8">
               <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">QR code studio</h2>
-              <p className="mt-1 text-[15px] text-slate-500">Make a code, check it scans, and save it to reuse later.</p>
+              <p className="mt-1 text-[15px] text-slate-500">Make a code, check it scans, then download it.</p>
             </div>
 
             <div className={glass}>
@@ -236,12 +149,10 @@ export default function App() {
                   <PreviewPanel
                     state={state}
                     content={content}
-                    status={status}
                     onName={(name) => setState((current) => ({ ...current, name }))}
                     onPng={() => void downloadPng()}
                     onSvg={() => void downloadSvg()}
                     onCopy={() => void copyImage()}
-                    onSave={save}
                   />
                 </div>
                 <Tile step="01" title="Content" className="lg:col-span-7 lg:col-start-1 lg:row-start-1">
@@ -258,10 +169,6 @@ export default function App() {
                 </Tile>
               </div>
             </div>
-
-            <div className="mt-12 border-t border-slate-200/80 pt-10">
-              <Library items={library} activeId={activeId} onLoad={load} onRename={rename} onDuplicate={duplicate} onDelete={remove} />
-            </div>
           </div>
         </section>
 
@@ -269,10 +176,10 @@ export default function App() {
       </main>
 
       <footer className="border-t border-slate-200/80">
-        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-slate-400 sm:px-6">QR codes are created in your browser. Saved codes stay on this device. Always test a code before printing.</p>
+        <p className="mx-auto max-w-6xl px-4 py-6 text-xs text-slate-400 sm:px-6">QR codes are created in your browser. Always test a code before printing.</p>
       </footer>
 
-      <Toast toast={toast} onDismiss={() => setToast(null)} />
+      <Toast toast={toast} />
     </div>
   );
 }

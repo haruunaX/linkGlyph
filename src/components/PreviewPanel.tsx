@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import QRCode from "qrcode";
-import { Check, AlertCircle, ClipboardCopy, Download, Save } from "lucide-react";
+import { Check, AlertCircle, ClipboardCopy, Download } from "lucide-react";
 import { friendlyValue } from "../lib/qr";
 import type { ProjectState, ScanProof } from "../types";
 import { buttonPrimary, buttonSecondary } from "./ui";
@@ -8,17 +8,13 @@ import { buttonPrimary, buttonSecondary } from "./ui";
 interface Props {
   state: ProjectState;
   content: string;
-  status: "new" | "saved" | "edited";
   onName: (name: string) => void;
   onPng: () => void;
   onSvg: () => void;
   onCopy: () => void;
-  onSave: () => void;
 }
 
-const isMac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
-
-export function PreviewPanel({ state, content, status, onName, onPng, onSvg, onCopy, onSave }: Props) {
+export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -42,13 +38,6 @@ export function PreviewPanel({ state, content, status, onName, onPng, onSvg, onC
           placeholder="Untitled code"
           onChange={(e) => onName(e.target.value)}
         />
-        <span
-          className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-            status === "saved" ? "bg-mint/20 text-emerald-800" : status === "edited" ? "bg-amber-100 text-amber-800" : "bg-slate-100 text-slate-500"
-          }`}
-        >
-          {status === "saved" ? "Saved" : status === "edited" ? "Unsaved changes" : "Not saved"}
-        </span>
       </div>
 
       {/* Solid white plate: never glass, so the code always scans. */}
@@ -81,17 +70,10 @@ export function PreviewPanel({ state, content, status, onName, onPng, onSvg, onC
           </span>
         </button>
       </div>
-      <div className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-2">
-        <button type="button" onClick={onCopy} className={buttonSecondary} title="Copy image to clipboard">
-          <ClipboardCopy className="h-4 w-4" />
-          Copy
-        </button>
-        <button type="button" onClick={onSave} className={buttonSecondary}>
-          <Save className="h-4 w-4 text-emerald-600" />
-          <span className="truncate">{status === "edited" ? "Save changes" : status === "saved" ? "Saved" : "Save to My codes"}</span>
-          <kbd className="ml-auto hidden rounded-md border border-slate-200 bg-slate-50 px-1.5 font-sans text-[11px] font-medium text-slate-400 sm:inline">{isMac ? "⌘" : "Ctrl"} S</kbd>
-        </button>
-      </div>
+      <button type="button" onClick={onCopy} className={`${buttonSecondary} mt-2 w-full`}>
+        <ClipboardCopy className="h-4 w-4" />
+        Copy image
+      </button>
     </div>
   );
 }
