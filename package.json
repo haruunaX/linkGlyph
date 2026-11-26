@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "check": "tsc --noEmit",
-    "backend": "python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000"
+    "backend": "python -m uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000",
+    "test": "vitest run"
   },
   "dependencies": {
     "lucide-react": "^1.79.0",
@@ -23,6 +24,7 @@
     "@vitejs/plugin-react": "^6.3.0",
     "tailwindcss": "^4.3.5",
     "typescript": "^7.0.2",
-    "vite": "^8.3.8"
+    "vite": "^8.3.8",
+    "vitest": "^5.1.2"
   }
 }
