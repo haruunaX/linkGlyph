@@ -19,6 +19,8 @@ export const defaults: ProjectState = {
   level: "M",
   margin: 4,
   name: "My first glyph",
+  showCaption: false,
+  caption: "Scan me",
 };
 
 const wifiEscape = (value: string) => value.replace(/([\\;,":])/g, "\\$1");

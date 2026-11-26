@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import QRCode from "qrcode";
 import { buildQrContent, defaults, safeFilename } from "./lib/qr";
 import { readDraft, writeDraft } from "./lib/storage";
+import { renderCanvas, renderSvg } from "./lib/render";
 import type { ProjectState } from "./types";
 import { Header } from "./components/Header";
 import { ContentForm } from "./components/ContentForm";
@@ -51,8 +51,6 @@ export default function App() {
     return () => window.clearTimeout(timer);
   }, [state]);
 
-  const qrOptions = { margin: state.margin, errorCorrectionLevel: state.level, color: { dark: state.dark, light: state.light } };
-
   const triggerDownload = (url: string, filename: string) => {
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -63,13 +61,13 @@ export default function App() {
   };
 
   const downloadPng = async () => {
-    const url = await QRCode.toDataURL(content, { ...qrOptions, width: state.size });
+    const url = (await renderCanvas(state, content, state.size)).toDataURL("image/png");
     triggerDownload(url, `${safeFilename(state.name)}.png`);
     notify("PNG downloaded");
   };
 
   const downloadSvg = async () => {
-    const svg = await QRCode.toString(content, { ...qrOptions, type: "svg" });
+    const svg = await renderSvg(state, content);
     const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
     triggerDownload(url, `${safeFilename(state.name)}.svg`);
     window.setTimeout(() => URL.revokeObjectURL(url), 1000);
@@ -79,8 +77,8 @@ export default function App() {
   const copyImage = async () => {
     try {
       if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) throw new Error("unsupported");
-      const url = await QRCode.toDataURL(content, { ...qrOptions, width: state.size });
-      const blob = await (await fetch(url)).blob();
+      const canvas = await renderCanvas(state, content, state.size);
+      const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("encode failed"))), "image/png"));
       await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
       notify("Image copied to clipboard");
     } catch {

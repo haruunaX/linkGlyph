@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Check } from "lucide-react";
 import type { ErrorLevel, ProjectState } from "../types";
-import { label } from "./ui";
+import { input, label } from "./ui";
 
 export const presets = [
   { name: "Ink", dark: "#0B1220", light: "#FFFFFF" },
@@ -129,6 +129,41 @@ export function StylePanel({ state, onChange }: Props) {
         <ColorInput title="Code color" value={state.dark} onValue={(v) => setColor("dark", v)} />
         <ColorInput title="Background" value={state.light} onValue={(v) => setColor("light", v)} />
       </div>
+
+      <CaptionControl state={state} onChange={onChange} />
+    </div>
+  );
+}
+
+function CaptionControl({ state, onChange }: Props) {
+  const on = state.showCaption;
+  return (
+    <div className="flex flex-col gap-2 xl:min-h-[42px] xl:flex-row xl:items-center xl:gap-3">
+      <div className="flex items-center justify-between gap-3 xl:shrink-0 xl:justify-start">
+        <span id="caption-label" className={`${label} whitespace-nowrap`}>
+          Text below code
+        </span>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={on}
+          aria-labelledby="caption-label"
+          onClick={() => onChange({ ...state, showCaption: !on })}
+          className={`relative h-6 w-11 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-mint/40 ${on ? "bg-ink" : "bg-slate-200"}`}
+        >
+          <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${on ? "translate-x-5" : ""}`} />
+        </button>
+      </div>
+      {on && (
+        <input
+          aria-label="Text below code"
+          className={`${input} animate-[fade-in_.2s_ease-out] xl:min-w-0 xl:flex-1 xl:py-2`}
+          maxLength={40}
+          value={state.caption}
+          placeholder="Scan me"
+          onChange={(e) => onChange({ ...state, caption: e.target.value })}
+        />
+      )}
     </div>
   );
 }

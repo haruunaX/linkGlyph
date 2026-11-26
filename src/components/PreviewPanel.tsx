@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
-import QRCode from "qrcode";
 import { ClipboardCopy, Download } from "lucide-react";
 import { friendlyValue } from "../lib/qr";
+import { renderCanvas } from "../lib/render";
 import { prefersReducedMotion } from "../lib/motion";
 import type { ProjectState } from "../types";
 import { buttonPrimary, buttonSecondary } from "./ui";
@@ -26,16 +26,21 @@ export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: P
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    QRCode.toCanvas(canvas, content, {
-      width: 800,
-      margin: state.margin,
-      errorCorrectionLevel: state.level,
-      color: { dark: state.dark, light: state.light },
-    }).catch(() => undefined);
+    let cancelled = false;
+    renderCanvas(state, content, 800)
+      .then((src) => {
+        if (cancelled) return;
+        canvas.width = src.width;
+        canvas.height = src.height;
+        canvas.getContext("2d")?.drawImage(src, 0, 0);
+      })
+      .catch(() => undefined);
 
     if (firstDraw.current || prefersReducedMotion()) {
       firstDraw.current = false;
-      return;
+      return () => {
+        cancelled = true;
+      };
     }
     // A quick "pop" on every change, then one scan sweep once edits settle.
     canvas.animate([{ transform: "scale(.975)", opacity: 0.75 }, { transform: "scale(1)", opacity: 1 }], { duration: 260, easing: "cubic-bezier(.2,.7,.2,1)" });
@@ -50,8 +55,11 @@ export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: P
         { duration: 1100, easing: "ease-in-out" },
       );
     }, 450);
-    return () => window.clearTimeout(timer);
-  }, [content, state.dark, state.light, state.level, state.margin]);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [content, state.dark, state.light, state.level, state.margin, state.showCaption, state.caption]);
 
   // Subtle 3D tilt toward the pointer (mouse/pen only).
   const onTilt = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -79,10 +87,13 @@ export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: P
 
       {/* Solid white plate: never glass, so the code always scans. */}
       <div className="mt-2.5 flex flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white p-4 lg:p-3" onPointerMove={onTilt} onPointerLeave={resetTilt}>
-        <div ref={tiltRef} className="relative w-full max-w-[300px] overflow-hidden rounded-md transition-transform duration-200 ease-out will-change-transform lg:max-w-[min(340px,calc(100vh-460px))]">
+        <div ref={tiltRef} className={`relative w-full max-w-[300px] overflow-hidden rounded-md transition-transform duration-200 ease-out will-change-transform ${
+            // With a caption the image is ~15% taller, so trim its width on short screens to keep the same height.
+            state.showCaption ? "lg:max-w-[min(340px,calc((100vh-460px)*0.86))]" : "lg:max-w-[min(340px,calc(100vh-460px))]"
+          }`}>
           <canvas
             ref={canvasRef}
-            className="block aspect-square !h-auto !w-full"
+            className="block !h-auto !w-full"
             style={{ background: state.light }}
             aria-label={`QR code for ${friendlyValue(state)}`}
             role="img"

@@ -22,4 +22,6 @@ export interface ProjectState {
   level: ErrorLevel;
   margin: number;
   name: string;
+  showCaption: boolean;
+  caption: string;
 }

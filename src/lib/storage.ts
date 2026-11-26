@@ -16,8 +16,8 @@ function browserStore(): Storage | undefined {
 }
 
 export function withDefaults(value: Partial<ProjectState>): ProjectState {
-  const { type, fields, dark, light, size, level, margin, name } = { ...structuredClone(defaults), ...value };
-  return { type, dark, light, size, level, margin, name, fields: { ...structuredClone(defaults.fields), ...(fields ?? {}) } };
+  const { type, fields, dark, light, size, level, margin, name, showCaption, caption } = { ...structuredClone(defaults), ...value };
+  return { type, dark, light, size, level, margin, name, showCaption: Boolean(showCaption), caption: String(caption ?? ""), fields: { ...structuredClone(defaults.fields), ...(fields ?? {}) } };
 }
 
 /** The code in progress, so a reload doesn't lose it. Returns null if missing or unreadable. */
