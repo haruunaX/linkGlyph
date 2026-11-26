@@ -23,11 +23,3 @@ export interface ProjectState {
   margin: number;
   name: string;
 }
-
-export interface ScanProof {
-  score: number;
-  grade: "Excellent" | "Good" | "Needs work";
-  contrast_ratio: number;
-  recommendations: string[];
-  source: "python" | "browser";
-}

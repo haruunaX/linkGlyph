@@ -138,12 +138,34 @@
   transition:
     opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
     transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
     border-color 0.3s ease,
     background-color 0.3s ease;
 }
 [data-reveal]:not([data-visible]) {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(28px) scale(0.98);
+  filter: blur(6px);
+}
+
+/* Cursor spotlight on tiles (see useSpotlight). Sits behind the tile's content. */
+[data-spotlight] {
+  position: relative;
+  isolation: isolate;
+}
+[data-spotlight]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%), rgba(94, 230, 168, 0.16), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+[data-spotlight]:hover::before {
+  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,4 +1,4 @@
-import type { ProjectState, ScanProof } from "../types";
+import type { ProjectState } from "../types";
 
 export const defaults: ProjectState = {
   type: "url",
@@ -51,57 +51,6 @@ export function friendlyValue(state: ProjectState): string {
   if (state.type === "email") return state.fields.email || "hello@example.com";
   if (state.type === "phone") return state.fields.phone || "+63 912 345 6789";
   return state.fields.ssid || "My Wi-Fi";
-}
-
-function luminance(hex: string): number {
-  const channels = hex
-    .slice(1)
-    .match(/.{2}/g)!
-    .map((channel) => Number.parseInt(channel, 16) / 255)
-    .map((channel) => (channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4));
-  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
-}
-
-export function contrastRatio(first: string, second: string): number {
-  const a = luminance(first);
-  const b = luminance(second);
-  return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-}
-
-export function browserScanProof(state: ProjectState, content: string): ScanProof {
-  const ratio = contrastRatio(state.dark, state.light);
-  let score = 100;
-  const recommendations: string[] = [];
-
-  if (ratio < 4.5) {
-    score -= ratio < 3 ? 42 : 24;
-    recommendations.push("Increase contrast between the code and its background.");
-  }
-  if (state.margin < 4) {
-    score -= 18;
-    recommendations.push("Use a quiet zone of at least 4 modules for reliable scanning.");
-  }
-  if (content.length > 500) {
-    score -= 16;
-    recommendations.push("Shorten the content or use a redirect URL to reduce QR density.");
-  } else if (content.length > 220) {
-    score -= 8;
-    recommendations.push("This is a dense code; test it at the final print size.");
-  }
-  if (state.size < 512) {
-    score -= 10;
-    recommendations.push("Export at 512 px or larger for sharper results.");
-  }
-  if (!recommendations.length) recommendations.push("Strong contrast and spacing — ready for a real-device scan test.");
-
-  score = Math.max(0, score);
-  return {
-    score,
-    grade: score >= 90 ? "Excellent" : score >= 72 ? "Good" : "Needs work",
-    contrast_ratio: Number(ratio.toFixed(2)),
-    recommendations,
-    source: "browser",
-  };
 }
 
 export function safeFilename(name: string): string {

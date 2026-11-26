@@ -1,5 +1,6 @@
-import { Plus } from "lucide-react";
-import { buttonSecondary, container } from "./ui";
+import { useRef } from "react";
+import { useScrollProgress } from "../lib/motion";
+import { container } from "./ui";
 
 export function BrandMark({ className = "h-9 w-9" }: { className?: string }) {
   return (
@@ -11,27 +12,29 @@ export function BrandMark({ className = "h-9 w-9" }: { className?: string }) {
   );
 }
 
-export function Header({ onNew }: { onNew: () => void }) {
+const navLink = "rounded-lg px-3 py-2 text-[15px] font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink sm:px-3.5 sm:text-base";
+
+export function Header() {
+  const barRef = useRef<HTMLDivElement>(null);
+  useScrollProgress(barRef);
+
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-md">
-      <div className={`${container} flex h-[72px] items-center justify-between`}>
-        <a href="#top" className="flex items-center gap-2.5 text-xl font-semibold tracking-tight text-ink">
-          <BrandMark />
+      <div className={`${container} flex h-16 items-center justify-between sm:h-[72px]`}>
+        <a href="#top" className="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-ink sm:text-xl">
+          <BrandMark className="h-8 w-8 sm:h-9 sm:w-9" />
           LinkGlyph
         </a>
         <nav className="flex items-center gap-1 sm:gap-2" aria-label="Primary navigation">
-          <a href="#studio" className="hidden rounded-lg px-3.5 py-2 text-base font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink md:inline-flex">
+          <a href="#studio" className={navLink}>
             Studio
           </a>
-          <a href="#features" className="hidden rounded-lg px-3.5 py-2 text-base font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink md:inline-flex">
+          <a href="#features" className={`${navLink} hidden sm:inline-flex`}>
             Why LinkGlyph
           </a>
-          <button type="button" onClick={onNew} className={`${buttonSecondary} px-4 py-2.5`}>
-            <Plus className="h-[18px] w-[18px] transition-transform duration-300 group-hover:rotate-90" />
-            New code
-          </button>
         </nav>
       </div>
+      <div ref={barRef} aria-hidden="true" className="absolute inset-x-0 -bottom-px h-[2px] origin-left scale-x-0 bg-mint" />
     </header>
   );
 }

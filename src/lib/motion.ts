@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
 export function prefersReducedMotion(): boolean {
   return typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -31,31 +31,43 @@ export function useScrollReveal(): void {
   }, []);
 }
 
-/** Smoothly counts from the previous value to `value`. */
-export function useCountUp(value: number, duration = 600): number {
-  const [shown, setShown] = useState(value);
-  const from = useRef(value);
-
+/** Feeds the pointer position to the `[data-spotlight]` tile under it, as `--mx` / `--my`. */
+export function useSpotlight(): void {
   useEffect(() => {
-    const start = from.current;
-    if (start === value || prefersReducedMotion()) {
-      from.current = value;
-      setShown(value);
-      return;
-    }
-    let frame = 0;
-    const began = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - began) / duration);
-      const eased = 1 - (1 - t) ** 3;
-      const next = Math.round(start + (value - start) * eased);
-      from.current = next;
-      setShown(next);
-      if (t < 1) frame = requestAnimationFrame(tick);
+    if (prefersReducedMotion()) return;
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      const el = (event.target as Element | null)?.closest?.<HTMLElement>("[data-spotlight]");
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+      el.style.setProperty("--my", `${event.clientY - rect.top}px`);
     };
-    frame = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(frame);
-  }, [value, duration]);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onMove);
+  }, []);
+}
 
-  return shown;
+/** Writes page scroll progress (0..1) into an element's `transform: scaleX()`. */
+export function useScrollProgress(ref: React.RefObject<HTMLElement | null>): void {
+  useEffect(() => {
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      if (ref.current) ref.current.style.transform = `scaleX(${p})`;
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, [ref]);
 }
