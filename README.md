@@ -22,7 +22,7 @@ Start the Python API in one terminal:
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
-pip install -r backend/requirements.txt
+pip install -r requirements.txt
 npm run backend
 ```
 
@@ -33,6 +33,17 @@ npm run dev
 ```
 
 Open the local URL printed by Vite. The Vite development server proxies `/api` to FastAPI on port `8000`.
+
+## Deploy to Vercel
+
+The frontend and backend deploy together as one Vercel project from this folder:
+
+- `vite build` outputs the React app to `dist/`, which Vercel serves as static files.
+- `api/index.py` exposes the FastAPI app from `backend/main.py` as a Python serverless function.
+- `vercel.json` sends every `/api/*` request to that function. Because the app and API share one domain, CORS isn't needed in production.
+- `requirements.txt` at the repo root lists the Python dependencies Vercel installs.
+
+To deploy, import the repo in Vercel with **Add New → Project** (the settings come from `vercel.json`, so leave the defaults), or run `npx vercel` from this folder. Use `npx vercel --prod` for production.
 
 ## Features
 
