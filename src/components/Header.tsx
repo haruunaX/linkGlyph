@@ -19,7 +19,13 @@ export function Header({ savedCount, onNew }: { savedCount: number; onNew: () =>
           <BrandMark />
           LinkGlyph
         </a>
-        <div className="flex items-center gap-2">
+        <nav className="flex items-center gap-1 sm:gap-2" aria-label="Primary navigation">
+          <a href="#studio" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink md:inline-flex">
+            Studio
+          </a>
+          <a href="#features" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink md:inline-flex">
+            Why LinkGlyph
+          </a>
           <a href="#library" className="hidden rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink sm:inline-flex">
             My codes
             <span className="ml-2 rounded-md bg-slate-100 px-1.5 text-xs tabular-nums text-slate-500">{savedCount}</span>
@@ -28,7 +34,7 @@ export function Header({ savedCount, onNew }: { savedCount: number; onNew: () =>
             <Plus className="h-4 w-4" />
             New code
           </button>
-        </div>
+        </nav>
       </div>
     </header>
   );

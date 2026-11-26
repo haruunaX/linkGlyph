@@ -9,6 +9,7 @@ import { StylePanel } from "./components/StylePanel";
 import { PreviewPanel } from "./components/PreviewPanel";
 import { Library } from "./components/Library";
 import { Toast, type ToastMessage } from "./components/Toast";
+import { Features, Hero } from "./components/Landing";
 import { card } from "./components/ui";
 
 function toProjectState(project: SavedProject): ProjectState {
@@ -17,6 +18,8 @@ function toProjectState(project: SavedProject): ProjectState {
 }
 
 const sameProject = (a: ProjectState, b: ProjectState) => JSON.stringify(a) === JSON.stringify(b);
+
+const scrollToStudio = () => document.getElementById("studio")?.scrollIntoView({ behavior: "smooth" });
 
 function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
@@ -168,14 +171,14 @@ export default function App() {
   const load = (project: SavedProject) => {
     setState(toProjectState(project));
     setActiveId(project.id);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToStudio();
     notify(`Opened "${project.name}"`);
   };
 
   const startNew = () => {
     setState(structuredClone({ ...defaults, name: "Untitled code" }));
     setActiveId(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToStudio();
   };
 
   const rename = (id: string, name: string) => {
@@ -212,39 +215,47 @@ export default function App() {
     <div id="top" className="min-h-screen bg-canvas">
       <Header savedCount={library.length} onNew={startNew} />
 
-      <main className="mx-auto max-w-6xl px-4 pb-20 pt-6 sm:px-6 sm:pt-10">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">QR code studio</h1>
-          <p className="mt-1 text-[15px] text-slate-500">Make a code, check it scans, and save it to reuse later.</p>
-        </div>
+      <main>
+        <Hero />
 
-        <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-6">
-          <div className="order-first lg:sticky lg:top-24 lg:order-last">
-            <PreviewPanel
-              state={state}
-              content={content}
-              scanProof={scanProof}
-              status={status}
-              onName={(name) => setState((current) => ({ ...current, name }))}
-              onPng={() => void downloadPng()}
-              onSvg={() => void downloadSvg()}
-              onCopy={() => void copyImage()}
-              onSave={save}
-            />
-          </div>
-          <div className="space-y-5">
-            <Step n={1} title="Content">
-              <ContentForm state={state} onChange={setState} />
-            </Step>
-            <Step n={2} title="Style">
-              <StylePanel state={state} onChange={setState} />
-            </Step>
-          </div>
-        </div>
+        <section id="studio" className="scroll-mt-16 border-t border-slate-200/80">
+          <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
+            <div className="mb-6 sm:mb-8">
+              <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">QR code studio</h2>
+              <p className="mt-1 text-[15px] text-slate-500">Make a code, check it scans, and save it to reuse later.</p>
+            </div>
 
-        <div className="mt-12 border-t border-slate-200/80 pt-10">
-          <Library items={library} activeId={activeId} onLoad={load} onRename={rename} onDuplicate={duplicate} onDelete={remove} />
-        </div>
+            <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-6">
+              <div className="order-first lg:sticky lg:top-24 lg:order-last">
+                <PreviewPanel
+                  state={state}
+                  content={content}
+                  scanProof={scanProof}
+                  status={status}
+                  onName={(name) => setState((current) => ({ ...current, name }))}
+                  onPng={() => void downloadPng()}
+                  onSvg={() => void downloadSvg()}
+                  onCopy={() => void copyImage()}
+                  onSave={save}
+                />
+              </div>
+              <div className="space-y-5">
+                <Step n={1} title="Content">
+                  <ContentForm state={state} onChange={setState} />
+                </Step>
+                <Step n={2} title="Style">
+                  <StylePanel state={state} onChange={setState} />
+                </Step>
+              </div>
+            </div>
+
+            <div className="mt-12 border-t border-slate-200/80 pt-10">
+              <Library items={library} activeId={activeId} onLoad={load} onRename={rename} onDuplicate={duplicate} onDelete={remove} />
+            </div>
+          </div>
+        </section>
+
+        <Features />
       </main>
 
       <footer className="border-t border-slate-200/80">
