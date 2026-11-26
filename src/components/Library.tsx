@@ -89,7 +89,7 @@ export function Library({ items, activeId, onLoad, onRename, onDuplicate, onDele
             return (
               <li
                 key={item.id}
-                className={`group relative flex items-center gap-3 rounded-xl border bg-white p-2.5 pr-2 transition hover:border-slate-300 hover:shadow-[0_8px_24px_-12px_rgba(15,23,42,.18)] ${
+                className={`group relative flex items-center gap-3 rounded-xl border bg-white p-2.5 pr-2 transition hover:border-slate-300 hover:bg-slate-50/50 ${
                   active ? "border-ink/70 ring-2 ring-mint/40" : "border-slate-200/80"
                 }`}
               >

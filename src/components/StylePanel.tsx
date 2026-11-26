@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Check } from "lucide-react";
 import type { ErrorLevel, ProjectState } from "../types";
-import { input, label } from "./ui";
+import { label } from "./ui";
 
 export const presets = [
   { name: "Ink", dark: "#0B1220", light: "#FFFFFF" },
@@ -29,8 +29,8 @@ function ColorInput({ title, value, onValue }: { title: string; value: string; o
   return (
     <label className={label}>
       {title}
-      <div className="mt-1.5 flex items-center gap-2 rounded-lg border border-slate-200 bg-white p-1 pr-3 shadow-[0_1px_2px_rgba(15,23,42,.04)] transition focus-within:border-slate-400 focus-within:ring-4 focus-within:ring-mint/30 hover:border-slate-300">
-        <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-md border border-black/10" style={{ background: value }}>
+      <div className="mt-1.5 flex items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/60 p-1.5 pr-3 transition focus-within:border-ink focus-within:bg-white focus-within:ring-4 focus-within:ring-mint/30 hover:border-slate-300">
+        <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-lg border border-black/10" style={{ background: value }}>
           <input aria-label={`${title} picker`} className="absolute inset-0 h-full w-full cursor-pointer opacity-0" type="color" value={value} onChange={(e) => onValue(e.target.value.toUpperCase())} />
         </span>
         <input
@@ -47,21 +47,31 @@ function ColorInput({ title, value, onValue }: { title: string; value: string; o
   );
 }
 
-function Select({ title, value, onValue, options }: { title: string; value: string; onValue: (v: string) => void; options: Array<[string, string]> }) {
+function Segmented<T extends string | number>({ title, value, options, onValue }: { title: string; value: T; options: Array<[T, string, string?]>; onValue: (v: T) => void }) {
   return (
-    <label className={label}>
-      {title}
-      <div className="relative mt-1.5">
-        <select className={`${input} appearance-none pr-10`} value={value} onChange={(e) => onValue(e.target.value)}>
-          {options.map(([v, text]) => (
-            <option key={v} value={v}>
+    <div>
+      <span className={label}>{title}</span>
+      <div role="radiogroup" aria-label={title} className="mt-1.5 grid gap-1 rounded-xl bg-slate-100 p-1" style={{ gridTemplateColumns: `repeat(${options.length}, minmax(0, 1fr))` }}>
+        {options.map(([v, text, hint]) => {
+          const active = v === value;
+          return (
+            <button
+              key={String(v)}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              title={hint}
+              onClick={() => onValue(v)}
+              className={`whitespace-nowrap rounded-lg px-1 py-2 text-xs font-medium tabular-nums transition sm:px-2 sm:text-[13px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
+                active ? "bg-white text-ink ring-1 ring-slate-200" : "text-slate-500 hover:text-ink"
+              }`}
+            >
               {text}
-            </option>
-          ))}
-        </select>
-        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            </button>
+          );
+        })}
       </div>
-    </label>
+    </div>
   );
 }
 
@@ -70,7 +80,7 @@ export function StylePanel({ state, onChange }: Props) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Color presets">
+      <div className="grid grid-cols-4 gap-2" role="radiogroup" aria-label="Color presets">
         {presets.map((preset) => {
           const active = state.dark === preset.dark && state.light === preset.light;
           return (
@@ -80,15 +90,20 @@ export function StylePanel({ state, onChange }: Props) {
               role="radio"
               aria-checked={active}
               onClick={() => onChange({ ...state, dark: preset.dark, light: preset.light })}
-              className={`group inline-flex items-center gap-2 rounded-full border py-1 pl-1 pr-3 text-[13px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
-                active ? "border-ink bg-ink text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-ink"
+              className={`group relative flex flex-col items-start gap-2 rounded-xl border p-2.5 text-left text-[13px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
+                active ? "border-ink text-ink ring-1 ring-ink" : "border-slate-200 text-slate-600 hover:border-slate-300 hover:text-ink"
               }`}
             >
-              <span
-                className={`h-6 w-6 rounded-full border ${active ? "border-white/40" : "border-black/10"}`}
-                style={{ background: `linear-gradient(135deg, ${preset.dark} 50%, ${preset.light} 50%)` }}
-              />
+              <span className="flex h-9 w-full overflow-hidden rounded-lg border border-black/5">
+                <i className="w-1/2" style={{ background: preset.dark }} />
+                <i className="w-1/2" style={{ background: preset.light }} />
+              </span>
               {preset.name}
+              {active && (
+                <span className="absolute right-2 top-2 grid h-4 w-4 place-items-center rounded-full bg-mint text-ink">
+                  <Check className="h-3 w-3" strokeWidth={3} />
+                </span>
+              )}
             </button>
           );
         })}
@@ -98,36 +113,40 @@ export function StylePanel({ state, onChange }: Props) {
         <ColorInput title="Code color" value={state.dark} onValue={(v) => setColor("dark", v)} />
         <ColorInput title="Background" value={state.light} onValue={(v) => setColor("light", v)} />
       </div>
+    </div>
+  );
+}
 
-      <details className="group rounded-xl border border-slate-200/80 bg-slate-50/60 open:bg-white">
-        <summary className="flex cursor-pointer list-none items-center justify-between rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint">
-          Advanced
-          <span className="flex items-center gap-2 text-xs font-normal text-slate-400">
-            {state.size}px · {state.level} · margin {state.margin}
-            <ChevronDown className="h-4 w-4 transition group-open:rotate-180" />
-          </span>
-        </summary>
-        <div className="grid gap-4 border-t border-slate-200/80 px-4 pb-4 pt-4 sm:grid-cols-2">
-          <Select
-            title="Export size"
-            value={String(state.size)}
-            onValue={(v) => onChange({ ...state, size: Number(v) })}
-            options={[["512", "512 × 512"], ["1024", "1024 × 1024"], ["2048", "2048 × 2048"]]}
-          />
-          <Select
-            title="Error correction"
-            value={state.level}
-            onValue={(v) => onChange({ ...state, level: v as ErrorLevel })}
-            options={[["L", "Low · 7%"], ["M", "Medium · 15%"], ["Q", "Quartile · 25%"], ["H", "High · 30%"]]}
-          />
-          <label className={`${label} sm:col-span-2`}>
-            <span className="flex justify-between">
-              Quiet zone<span className="tabular-nums text-slate-400">{state.margin} modules</span>
-            </span>
-            <input className="range mt-3 w-full" type="range" min={2} max={10} value={state.margin} onChange={(e) => onChange({ ...state, margin: Number(e.target.value) })} />
-          </label>
-        </div>
-      </details>
+export function AdvancedPanel({ state, onChange }: Props) {
+  return (
+    <div className="space-y-5">
+      <Segmented<number>
+        title="Export size"
+        value={state.size}
+        onValue={(size) => onChange({ ...state, size })}
+        options={[
+          [512, "512 px"],
+          [1024, "1024 px"],
+          [2048, "2048 px"],
+        ]}
+      />
+      <Segmented<ErrorLevel>
+        title="Error correction"
+        value={state.level}
+        onValue={(level) => onChange({ ...state, level })}
+        options={[
+          ["L", "L · 7%", "Low"],
+          ["M", "M · 15%", "Medium"],
+          ["Q", "Q · 25%", "Quartile"],
+          ["H", "H · 30%", "High"],
+        ]}
+      />
+      <label className={label}>
+        <span className="flex justify-between">
+          Quiet zone<span className="tabular-nums text-slate-400">{state.margin} modules</span>
+        </span>
+        <input className="range mt-3 w-full" type="range" min={2} max={10} value={state.margin} onChange={(e) => onChange({ ...state, margin: Number(e.target.value) })} />
+      </label>
     </div>
   );
 }

@@ -5,12 +5,12 @@ import { duplicateInLibrary, readDraft, readLibrary, renameInLibrary, saveToLibr
 import type { ProjectState, SavedProject, ScanProof } from "./types";
 import { Header } from "./components/Header";
 import { ContentForm } from "./components/ContentForm";
-import { StylePanel } from "./components/StylePanel";
-import { PreviewPanel } from "./components/PreviewPanel";
+import { AdvancedPanel, StylePanel } from "./components/StylePanel";
+import { PreviewPanel, ScanProofTile } from "./components/PreviewPanel";
 import { Library } from "./components/Library";
 import { Toast, type ToastMessage } from "./components/Toast";
 import { Features, Hero } from "./components/Landing";
-import { card } from "./components/ui";
+import { glass, tile } from "./components/ui";
 
 function toProjectState(project: SavedProject): ProjectState {
   const { type, fields, dark, light, size, level, margin, name } = withDefaults(project);
@@ -21,13 +21,13 @@ const sameProject = (a: ProjectState, b: ProjectState) => JSON.stringify(a) === 
 
 const scrollToStudio = () => document.getElementById("studio")?.scrollIntoView({ behavior: "smooth" });
 
-function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+function Tile({ step, title, className = "", children }: { step?: string; title: string; className?: string; children: React.ReactNode }) {
   return (
-    <section className={`${card} p-5 sm:p-6`}>
-      <h2 className="mb-4 flex items-center gap-2.5 text-[15px] font-semibold text-ink">
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-slate-100 text-xs font-semibold tabular-nums text-slate-500">{n}</span>
+    <section className={`${tile} p-5 sm:p-6 ${className}`} aria-label={title}>
+      <h3 className="mb-4 flex items-center gap-2 text-sm font-semibold text-ink">
+        {step && <span className="text-xs font-medium tabular-nums text-slate-400">{step}</span>}
         {title}
-      </h2>
+      </h3>
       {children}
     </section>
   );
@@ -218,34 +218,44 @@ export default function App() {
       <main>
         <Hero />
 
-        <section id="studio" className="scroll-mt-16 border-t border-slate-200/80">
+        <section id="studio" className="relative isolate scroll-mt-16 overflow-hidden border-t border-slate-200/80">
+          {/* Soft color field so the glass panel has something to frost. */}
+          <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
+            <div className="absolute -left-24 top-24 h-[420px] w-[420px] rounded-full bg-mint/35 blur-[110px]" />
+            <div className="absolute -right-16 top-64 h-[460px] w-[460px] rounded-full bg-periwinkle/35 blur-[120px]" />
+          </div>
           <div className="mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 sm:pt-14">
             <div className="mb-6 sm:mb-8">
               <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">QR code studio</h2>
               <p className="mt-1 text-[15px] text-slate-500">Make a code, check it scans, and save it to reuse later.</p>
             </div>
 
-            <div className="grid items-start gap-5 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-6">
-              <div className="order-first lg:sticky lg:top-24 lg:order-last">
-                <PreviewPanel
-                  state={state}
-                  content={content}
-                  scanProof={scanProof}
-                  status={status}
-                  onName={(name) => setState((current) => ({ ...current, name }))}
-                  onPng={() => void downloadPng()}
-                  onSvg={() => void downloadSvg()}
-                  onCopy={() => void copyImage()}
-                  onSave={save}
-                />
-              </div>
-              <div className="space-y-5">
-                <Step n={1} title="Content">
+            <div className={glass}>
+              <div className="grid gap-2.5 sm:gap-3 lg:grid-cols-12 [&>*]:min-w-0">
+                <div className={`${tile} order-first p-4 sm:p-5 lg:order-none lg:col-span-5 lg:col-start-8 lg:row-span-3 lg:row-start-1`}>
+                  <PreviewPanel
+                    state={state}
+                    content={content}
+                    status={status}
+                    onName={(name) => setState((current) => ({ ...current, name }))}
+                    onPng={() => void downloadPng()}
+                    onSvg={() => void downloadSvg()}
+                    onCopy={() => void copyImage()}
+                    onSave={save}
+                  />
+                </div>
+                <Tile step="01" title="Content" className="lg:col-span-7 lg:col-start-1 lg:row-start-1">
                   <ContentForm state={state} onChange={setState} />
-                </Step>
-                <Step n={2} title="Style">
+                </Tile>
+                <Tile step="02" title="Style" className="lg:col-span-7 lg:col-start-1 lg:row-start-2">
                   <StylePanel state={state} onChange={setState} />
-                </Step>
+                </Tile>
+                <Tile step="03" title="Output" className="lg:col-span-4 lg:col-start-1 lg:row-start-3">
+                  <AdvancedPanel state={state} onChange={setState} />
+                </Tile>
+                <Tile title="Scan Proof" className="lg:col-span-3 lg:col-start-5 lg:row-start-3">
+                  <ScanProofTile scanProof={scanProof} />
+                </Tile>
               </div>
             </div>
 

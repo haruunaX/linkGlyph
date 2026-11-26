@@ -31,7 +31,7 @@ export function ContentForm({ state, onChange }: Props) {
 
   return (
     <div>
-      <div role="tablist" aria-label="QR content type" className="grid grid-cols-5 gap-1 rounded-xl bg-slate-100/80 p-1">
+      <div role="tablist" aria-label="QR content type" className="grid grid-cols-5 gap-1 rounded-xl bg-slate-100 p-1">
         {typeOptions.map(({ id, label: text, icon: Icon }) => {
           const active = state.type === id;
           return (
@@ -42,7 +42,7 @@ export function ContentForm({ state, onChange }: Props) {
               aria-selected={active}
               onClick={() => onChange({ ...state, type: id })}
               className={`flex min-w-0 items-center justify-center gap-1.5 rounded-lg px-1 py-2 text-xs font-medium sm:px-2 sm:text-[13px] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mint ${
-                active ? "bg-white text-ink shadow-[0_1px_3px_rgba(15,23,42,.12)]" : "text-slate-500 hover:text-ink"
+                active ? "bg-white text-ink ring-1 ring-slate-200" : "text-slate-500 hover:text-ink"
               }`}
             >
               <Icon className="hidden h-4 w-4 shrink-0 sm:block" />
