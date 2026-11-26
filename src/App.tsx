@@ -16,8 +16,8 @@ import { Marquee } from "./components/Marquee";
 function Tile({ step, title, className = "", children }: { step?: string; title: string; className?: string; children: React.ReactNode }) {
   return (
     <section data-reveal data-spotlight className={`${tile} p-4 sm:p-5 ${className}`} aria-label={title}>
-      <h3 className="mb-3 flex items-center gap-2 text-base font-semibold text-ink">
-        {step && <span className="text-sm font-medium tabular-nums text-slate-400">{step}</span>}
+      <h3 className="mb-3 flex items-center gap-2 text-[15px] font-semibold text-ink">
+        {step && <span className="text-[13px] font-medium tabular-nums text-slate-400">{step}</span>}
         {title}
       </h3>
       {children}
@@ -96,7 +96,7 @@ export default function App() {
         <Hero />
         <Marquee />
 
-        <section id="studio" className="relative isolate scroll-mt-16 overflow-hidden sm:scroll-mt-[72px] border-t border-slate-200/80">
+        <section id="studio" className="relative isolate scroll-mt-16 overflow-hidden border-t border-slate-200/80">
           {/* Soft color field so the glass panel has something to frost. */}
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
             <div className="absolute -left-24 top-24 h-[460px] w-[460px] animate-[drift-a_16s_ease-in-out_infinite_alternate] rounded-full bg-mint/35 blur-[110px]" />
@@ -104,8 +104,8 @@ export default function App() {
           </div>
           <div className={`${container} py-10 sm:py-12 lg:py-5`}>
             <div data-reveal className="mb-5 flex flex-col gap-1 sm:mb-6 sm:flex-row sm:items-end sm:justify-between lg:mb-4">
-              <h2 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">QR code studio</h2>
-              <p className="text-base text-slate-500">Make a code, style it, then download it.</p>
+              <h2 className="text-heading font-semibold tracking-tight text-ink">QR code studio</h2>
+              <p className="text-[15px] text-slate-500">Make a code, style it, then download it.</p>
             </div>
 
             <div className={glass}>

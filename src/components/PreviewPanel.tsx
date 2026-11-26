@@ -70,7 +70,7 @@ export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: P
     <div className="flex h-full flex-col">
       <input
         aria-label="Code name"
-        className="w-full rounded-lg bg-transparent px-2 py-1 text-base font-semibold text-ink outline-none transition hover:bg-slate-50 focus:bg-slate-50 focus:ring-2 focus:ring-mint/40 sm:text-lg"
+        className="w-full rounded-lg bg-transparent px-2 py-1 text-[15px] font-semibold text-ink outline-none transition hover:bg-slate-50 focus:bg-slate-50 focus:ring-2 focus:ring-mint/40 sm:text-base"
         maxLength={40}
         value={state.name}
         placeholder="Untitled code"
@@ -90,7 +90,7 @@ export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: P
           <span ref={scanRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[3px] rounded-full bg-mint opacity-0 shadow-[0_0_18px_4px_rgba(94,230,168,.65)]" />
         </div>
       </div>
-      <p className="mt-2 truncate px-2 text-center text-sm text-slate-400" title={friendlyValue(state)}>
+      <p className="mt-2 truncate px-2 text-center text-[13px] text-slate-400" title={friendlyValue(state)}>
         {friendlyValue(state)}
       </p>
 
@@ -105,7 +105,7 @@ export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: P
         <button
           type="button"
           onClick={onSvg}
-          className="group inline-flex items-center justify-center gap-2 rounded-xl bg-mint px-5 py-3 text-base font-semibold text-ink transition hover:bg-[#4fd99a] active:scale-[.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-mint/40"
+          className="group inline-flex items-center justify-center gap-2 rounded-xl bg-mint px-4 py-2.5 text-[15px] font-semibold text-ink transition hover:bg-[#4fd99a] active:scale-[.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-mint/40"
         >
           <Download className={downloadIcon} />
           <span>

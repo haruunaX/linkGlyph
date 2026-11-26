@@ -7,7 +7,7 @@ import { container, tile } from "./ui";
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.16em] text-slate-500">
+    <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
       <span className="relative flex h-2 w-2">
         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-mint opacity-60" />
         <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
@@ -43,7 +43,7 @@ function LiveGlyph() {
   }, []);
 
   return (
-    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-white p-2.5 sm:h-32 sm:w-32 sm:p-3" aria-hidden="true">
+    <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white p-2 sm:h-28 sm:w-28 sm:p-2.5" aria-hidden="true">
       <div className="grid h-full w-full gap-[2px]" style={{ gridTemplateColumns: `repeat(${SIZE}, minmax(0, 1fr))` }}>
         {cells.map((on, i) => {
           const r = Math.floor(i / SIZE);
@@ -102,7 +102,7 @@ export function Hero() {
           <h1
             data-reveal
             style={delay(90)}
-            className="mt-6 text-[38px] font-semibold leading-[1.02] tracking-[-0.04em] text-ink min-[380px]:text-[44px] sm:text-6xl xl:text-[80px]"
+            className="mt-6 text-display font-semibold tracking-[-0.04em] text-ink"
           >
             Turn any link into a{" "}
             <span className="relative sm:whitespace-nowrap">
@@ -110,30 +110,30 @@ export function Hero() {
               <span className="absolute inset-x-0 bottom-1.5 h-3.5 origin-left animate-[underline_.9s_.55s_cubic-bezier(.2,.7,.2,1)_both] bg-mint/80 sm:bottom-2 sm:h-5" aria-hidden="true" />
             </span>
           </h1>
-          <p data-reveal style={delay(180)} className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
-            Create polished QR codes for websites, Wi-Fi, messages, and contact details. Customize every detail, then export it in crisp formats.
+          <p data-reveal style={delay(180)} className="mt-6 max-w-2xl text-lead text-slate-600">
+            Create polished QR codes for websites, Wi‑Fi, messages, and contact details. Customize every detail, then export it in crisp formats.
           </p>
           <div data-reveal style={delay(270)} className="mt-8 flex flex-col items-start gap-4 sm:mt-10 sm:flex-row sm:items-center">
             <a
               href="#studio"
-              className="group inline-flex items-center gap-2.5 rounded-xl bg-ink px-6 py-4 text-base font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-mint/40"
+              className="group inline-flex items-center gap-2.5 rounded-xl bg-ink px-5 py-3 text-[15px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-mint/40"
             >
               Create a QR code
-              <ArrowDown className="h-[18px] w-[18px] text-mint motion-safe:animate-[nudge_1.8s_ease-in-out_infinite]" />
+              <ArrowDown className="h-4 w-4 text-mint motion-safe:animate-[nudge_1.8s_ease-in-out_infinite]" />
             </a>
-            <span className="hidden items-center gap-2 text-base text-slate-500 sm:inline-flex">
-              <MousePointerClick className="h-5 w-5 text-emerald-600" />
+            <span className="hidden items-center gap-2 text-[15px] text-slate-500 sm:inline-flex">
+              <MousePointerClick className="h-[18px] w-[18px] text-emerald-600" />
               Move your cursor around
             </span>
           </div>
         </div>
 
         <div className="mt-6 grid gap-3 lg:col-span-5 lg:mt-0">
-          <div data-reveal data-spotlight style={delay(150)} className="flex items-center justify-between gap-5 rounded-2xl bg-ink p-6 text-white sm:gap-8 sm:p-8">
+          <div data-reveal data-spotlight style={delay(150)} className="flex items-center justify-between gap-5 rounded-2xl bg-ink p-5 text-white sm:gap-6 sm:p-7">
             <div className="min-w-0">
               <span className="rounded-full bg-mint px-3 py-1 text-xs font-semibold uppercase tracking-wider text-ink">Live preview</span>
-              <strong className="mt-5 block text-2xl font-semibold tracking-tight sm:text-3xl">What you see is what you print</strong>
-              <p className="mt-2 text-[15px] leading-6 text-slate-300">Every change renders instantly, and exports stay pixel-sharp.</p>
+              <strong className="mt-4 block text-heading font-semibold tracking-tight">What you see is what you print</strong>
+              <p className="mt-2 text-sm leading-6 text-slate-300">Every change renders instantly, and exports stay pixel-sharp.</p>
             </div>
             <LiveGlyph />
           </div>
@@ -143,9 +143,9 @@ export function Hero() {
               ["2048", "Pixel export"],
               ["SVG", "Print ready"],
             ].map(([value, text], i) => (
-              <div key={text} data-reveal data-spotlight style={delay(240 + i * 80)} className={`${tile} flex flex-col justify-between p-3.5 sm:p-6`}>
-                <strong className="text-[22px] font-semibold tracking-tight text-ink sm:text-4xl">{value}</strong>
-                <span className="mt-3 text-[13px] text-slate-500 sm:text-sm">{text}</span>
+              <div key={text} data-reveal data-spotlight style={delay(240 + i * 80)} className={`${tile} flex flex-col justify-between p-3.5 sm:p-5`}>
+                <strong className="text-stat font-semibold tracking-tight text-ink">{value}</strong>
+                <span className="mt-2 text-xs text-slate-500 sm:text-[13px]">{text}</span>
               </div>
             ))}
           </div>
@@ -165,22 +165,22 @@ const types = [
 
 function FeatureIcon({ icon: Icon }: { icon: typeof Layers3 }) {
   return (
-    <span className="grid h-12 w-12 place-items-center rounded-xl bg-ink text-mint transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
+    <span className="grid h-10 w-10 place-items-center rounded-xl bg-ink text-mint transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110">
       <Icon className="h-5 w-5" />
     </span>
   );
 }
 
-const featureTile = `${tile} group p-6 transition-colors duration-300 hover:border-ink/25 sm:p-9`;
+const featureTile = `${tile} group p-5 transition-colors duration-300 hover:border-ink/25 sm:p-7`;
 
 export function Features() {
   return (
-    <section id="features" className="scroll-mt-16 border-t border-slate-200/80 sm:scroll-mt-[72px]">
-      <div className={`${container} py-16 sm:py-20 lg:py-28`}>
+    <section id="features" className="scroll-mt-16 border-t border-slate-200/80">
+      <div className={`${container} py-14 sm:py-16 lg:py-20`}>
         <div className="max-w-3xl" data-reveal>
           <Eyebrow>Built for real life</Eyebrow>
-          <h2 className="mt-4 text-[34px] font-semibold leading-tight tracking-tight text-ink sm:text-5xl">Confidence before the first scan</h2>
-          <p className="mt-5 text-lg leading-8 text-slate-600 sm:text-xl sm:leading-9">
+          <h2 className="mt-4 text-title font-semibold tracking-tight text-ink">Confidence before the first scan</h2>
+          <p className="mt-5 text-lead text-slate-600">
             LinkGlyph keeps the creative freedom of a design tool and adds the practical touches needed for packaging, events, menus, and printed materials.
           </p>
         </div>
@@ -189,14 +189,14 @@ export function Features() {
           <article data-reveal data-spotlight style={delay(0)} className={`${featureTile} flex flex-col justify-between gap-10 md:col-span-2`}>
             <div>
               <FeatureIcon icon={Layers3} />
-              <h3 className="mt-6 text-xl font-semibold text-ink sm:text-2xl">Designed, not default</h3>
-              <p className="mt-3 max-w-lg text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">Curated palettes, flexible content types, and sharp exports make every code feel intentional.</p>
+              <h3 className="mt-6 text-subheading font-semibold text-ink">Designed, not default</h3>
+              <p className="mt-3 max-w-lg text-body text-slate-600">Curated palettes, flexible content types, and sharp exports make every code feel intentional.</p>
             </div>
             <div className="grid grid-cols-4 gap-2.5" aria-hidden="true">
               {presets.map((p, i) => (
                 <div
                   key={p.name}
-                  className="flex h-14 overflow-hidden rounded-xl border border-black/5 transition-transform duration-300 group-hover:-translate-y-1.5 sm:h-20"
+                  className="flex h-12 overflow-hidden rounded-xl border border-black/5 transition-transform duration-300 group-hover:-translate-y-1.5 sm:h-16"
                   style={{ transitionDelay: `${i * 50}ms` }}
                 >
                   <i className="w-1/2" style={{ background: p.dark }} />
@@ -208,8 +208,8 @@ export function Features() {
 
           <article data-reveal data-spotlight style={delay(90)} className={featureTile}>
             <FeatureIcon icon={LockKeyhole} />
-            <h3 className="mt-6 text-xl font-semibold text-ink sm:text-2xl">Private by default</h3>
-            <p className="mt-3 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">QR codes are generated right in your browser. Nothing is uploaded to create a code.</p>
+            <h3 className="mt-6 text-subheading font-semibold text-ink">Private by default</h3>
+            <p className="mt-3 text-body text-slate-600">QR codes are generated right in your browser. Nothing is uploaded to create a code.</p>
           </article>
 
           <article data-reveal data-spotlight style={delay(0)} className={featureTile}>
@@ -219,20 +219,20 @@ export function Features() {
                 <Zap className="h-4 w-4" /> Instant
               </span>
             </div>
-            <h3 className="mt-6 text-xl font-semibold text-ink sm:text-2xl">Export in seconds</h3>
-            <p className="mt-3 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">Sharp PNGs up to 2048 px, infinitely scalable SVGs, or copy straight to your clipboard.</p>
+            <h3 className="mt-6 text-subheading font-semibold text-ink">Export in seconds</h3>
+            <p className="mt-3 text-body text-slate-600">Sharp PNGs up to 2048 px, infinitely scalable SVGs, or copy straight to your clipboard.</p>
           </article>
 
           <article data-reveal data-spotlight style={delay(90)} className={`${featureTile} flex flex-col justify-between gap-8 md:col-span-2`}>
             <div>
-              <h3 className="text-xl font-semibold text-ink sm:text-2xl">Five ways to connect</h3>
-              <p className="mt-3 text-base leading-7 text-slate-600 sm:text-lg sm:leading-8">Links, plain text, email drafts, phone numbers, and one-tap Wi-Fi join.</p>
+              <h3 className="text-subheading font-semibold text-ink">Five ways to connect</h3>
+              <p className="mt-3 text-body text-slate-600">Links, plain text, email drafts, phone numbers, and one-tap Wi-Fi join.</p>
             </div>
             <div className="flex flex-wrap gap-2.5">
               {types.map(({ icon: Icon, label }, i) => (
                 <span
                   key={label}
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-base font-medium text-slate-700 transition-transform duration-300 group-hover:-translate-y-1.5"
+                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2 text-[15px] font-medium text-slate-700 transition-transform duration-300 group-hover:-translate-y-1.5"
                   style={{ transitionDelay: `${i * 45}ms` }}
                 >
                   <Icon className="h-[18px] w-[18px] text-slate-500" />

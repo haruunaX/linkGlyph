@@ -12,7 +12,7 @@ export function BrandMark({ className = "h-9 w-9" }: { className?: string }) {
   );
 }
 
-const navLink = "rounded-lg px-3 py-2 text-[15px] font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink sm:px-3.5 sm:text-base";
+const navLink = "rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-ink sm:px-3.5 sm:text-[15px]";
 
 export function Header() {
   const barRef = useRef<HTMLDivElement>(null);
@@ -20,9 +20,9 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/80 backdrop-blur-md">
-      <div className={`${container} flex h-16 items-center justify-between sm:h-[72px]`}>
-        <a href="#top" className="flex items-center gap-2.5 text-lg font-semibold tracking-tight text-ink sm:text-xl">
-          <BrandMark className="h-8 w-8 sm:h-9 sm:w-9" />
+      <div className={`${container} flex h-16 items-center justify-between`}>
+        <a href="#top" className="flex items-center gap-2.5 text-[17px] font-semibold tracking-tight text-ink">
+          <BrandMark className="h-8 w-8" />
           LinkGlyph
         </a>
         <nav className="flex items-center gap-1 sm:gap-2" aria-label="Primary navigation">
