@@ -60,7 +60,7 @@ export function ContentForm({ state, onChange }: Props) {
         )}
         {state.type === "text" && (
           <Field title="Text" hint={`${f.text.length} / 1200 characters`}>
-            <textarea className={`${input} min-h-28 resize-y lg:min-h-0`} rows={2} maxLength={1200} value={f.text} onChange={(e) => set("text", e.target.value)} />
+            <textarea className={`${input} min-h-28 resize-y lg:min-h-0 lg:[@media(max-height:760px)]:h-[42px]`} rows={2} maxLength={1200} value={f.text} onChange={(e) => set("text", e.target.value)} />
           </Field>
         )}
         {state.type === "email" && (

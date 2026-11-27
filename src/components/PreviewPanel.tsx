@@ -89,7 +89,7 @@ export function PreviewPanel({ state, content, onName, onPng, onSvg, onCopy }: P
       <div className="mt-2.5 flex flex-1 items-center justify-center rounded-2xl border border-slate-200 bg-white p-4 lg:p-3" onPointerMove={onTilt} onPointerLeave={resetTilt}>
         <div ref={tiltRef} className={`relative w-full max-w-[300px] overflow-hidden rounded-md transition-transform duration-200 ease-out will-change-transform ${
             // With a caption the image is ~15% taller, so trim its width on short screens to keep the same height.
-            state.showCaption ? "lg:max-w-[min(340px,calc((100vh-460px)*0.86))]" : "lg:max-w-[min(340px,calc(100vh-460px))]"
+            state.showCaption ? "lg:max-w-[min(420px,calc((100svh-470px)*0.86))]" : "lg:max-w-[min(420px,calc(100svh-470px))]"
           }`}>
           <canvas
             ref={canvasRef}

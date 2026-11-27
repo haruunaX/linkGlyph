@@ -91,17 +91,20 @@ export default function App() {
       <Header />
 
       <main>
-        <Hero />
-        <Marquee />
+        {/* Hero + ribbon share exactly one screen below the header. */}
+        <div className="flex min-h-[calc(100svh-4rem)] flex-col">
+          <Hero />
+          <Marquee />
+        </div>
 
-        <section id="studio" className="relative isolate scroll-mt-16 overflow-hidden border-t border-slate-200/80">
+        <section id="studio" className="relative isolate scroll-mt-16 overflow-hidden border-t border-slate-200/80 lg:flex lg:min-h-[calc(100svh-4rem)] lg:flex-col lg:justify-center">
           {/* Soft color field so the glass panel has something to frost. */}
           <div className="pointer-events-none absolute inset-0 -z-10" aria-hidden="true">
             <div className="absolute -left-24 top-24 h-[460px] w-[460px] animate-[drift-a_16s_ease-in-out_infinite_alternate] rounded-full bg-mint/35 blur-[110px]" />
             <div className="absolute -right-16 top-64 h-[500px] w-[500px] animate-[drift-b_19s_ease-in-out_infinite_alternate] rounded-full bg-periwinkle/35 blur-[120px]" />
           </div>
-          <div className={`${container} py-10 sm:py-12 lg:py-5`}>
-            <div data-reveal className="mb-5 flex flex-col gap-1 sm:mb-6 sm:flex-row sm:items-end sm:justify-between lg:mb-4">
+          <div className={`${container} py-10 sm:py-12 lg:py-[clamp(.75rem,2.5vh,2.5rem)]`}>
+            <div data-reveal className="mb-5 flex flex-col gap-1 sm:mb-6 sm:flex-row sm:items-end sm:justify-between lg:mb-[clamp(.75rem,2vh,1.5rem)]">
               <h2 className="text-heading font-semibold tracking-tight text-ink">QR code studio</h2>
               <p className="text-[15px] text-slate-500">Make a code, style it, then download it.</p>
             </div>

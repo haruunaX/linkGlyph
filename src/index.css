@@ -7,7 +7,7 @@
   --color-periwinkle: #8ea1ff;
 
   /* Fluid type scale: each size grows smoothly with the viewport between a min and a max. */
-  --text-display: clamp(2rem, 1.15rem + 3.4vw, 3.75rem);
+  --text-display: clamp(2rem, min(1.15rem + 3.4vw, 7vh), 4.25rem);
   --text-display--line-height: 1.04;
   --text-title: clamp(1.75rem, 1.25rem + 1.9vw, 2.75rem);
   --text-title--line-height: 1.1;
